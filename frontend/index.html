@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShelfSenseAI — Agentic Retail Decision Intelligence</title>
+<style>
+  :root{
+    --bg:#0e1512; --panel:#141d19; --panel-2:#182420;
+    --line:#28352f; --text:#e8ede9; --muted:#8fa79b;
+    --amber:#e0a95a; --teal:#4fb8a0; --red:#e0665a; --blue:#6f9fd8;
+    --mono:"IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+    --sans:"IBM Plex Sans", "Segoe UI", sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); font-size:14px;}
+  a{color:inherit;}
+  header{padding:22px 28px; border-bottom:1px solid var(--line); display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+  .brand{display:flex; align-items:baseline; gap:10px;}
+  .brand .mark{font-family:var(--mono); color:var(--teal); font-size:20px; letter-spacing:-1px;}
+  .brand h1{font-size:18px; margin:0; font-weight:600; letter-spacing:0.2px;}
+  .brand .tag{color:var(--muted); font-size:12px; font-family:var(--mono);}
+  .agent-strip{display:flex; gap:6px; font-family:var(--mono); font-size:11px; color:var(--muted);}
+  .agent-strip span{border:1px solid var(--line); padding:3px 8px; border-radius:3px;}
+
+  main{max-width:1180px; margin:0 auto; padding:24px 28px 60px;}
+  .kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin-bottom:26px;}
+  .kpi{background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:14px 16px;}
+  .kpi .label{color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:0.6px;}
+  .kpi .value{font-family:var(--mono); font-size:22px; margin-top:4px; color:var(--teal);}
+
+  .grid{display:grid; grid-template-columns:1.1fr 0.9fr; gap:18px;}
+  @media (max-width:900px){.grid{grid-template-columns:1fr;}}
+
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:18px 20px; margin-bottom:18px;}
+  .card h2{font-size:13px; text-transform:uppercase; letter-spacing:0.7px; color:var(--muted); margin:0 0 14px; display:flex; align-items:center; gap:8px;}
+  .card h2 .dot{width:6px; height:6px; border-radius:50%; background:var(--teal);}
+
+  .row{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;}
+  select, input, button{
+    background:var(--panel-2); color:var(--text); border:1px solid var(--line);
+    border-radius:5px; padding:8px 10px; font-family:var(--sans); font-size:13px;
+  }
+  button{cursor:pointer; background:var(--teal); color:#08211b; font-weight:600; border:none; transition:opacity .15s;}
+  button:hover{opacity:0.85;}
+  button.secondary{background:var(--panel-2); color:var(--text); border:1px solid var(--line);}
+  .tabs{display:flex; gap:4px; margin-bottom:14px; border-bottom:1px solid var(--line);}
+  .tab{padding:8px 14px; cursor:pointer; color:var(--muted); font-size:13px; border-bottom:2px solid transparent;}
+  .tab.active{color:var(--text); border-bottom-color:var(--teal);}
+  .pane{display:none;} .pane.active{display:block;}
+
+  table{width:100%; border-collapse:collapse; font-family:var(--mono); font-size:12.5px; margin-top:10px;}
+  th, td{text-align:left; padding:7px 8px; border-bottom:1px solid var(--line);}
+  th{color:var(--muted); font-weight:500; font-size:11px; text-transform:uppercase;}
+  tr.best td{color:var(--teal); font-weight:600;}
+
+  .badge{font-family:var(--mono); font-size:11px; padding:2px 7px; border-radius:3px; display:inline-block;}
+  .badge.low, .badge.monitor{background:#153229; color:var(--teal);}
+  .badge.medium, .badge.reorder{background:#332512; color:var(--amber);}
+  .badge.high, .badge.critical{background:#33191a; color:var(--red);}
+
+  .reasoning{background:var(--panel-2); border-left:3px solid var(--teal); padding:10px 12px; margin-top:10px; font-size:13px; color:var(--text); border-radius:0 4px 4px 0;}
+  .muted{color:var(--muted); font-size:12px;}
+  .policy-hit{border:1px solid var(--line); border-radius:5px; padding:8px 10px; margin-top:8px; font-size:12.5px;}
+  .policy-hit .t{color:var(--amber); font-weight:600; margin-bottom:3px;}
+  .plan-section{margin-bottom:14px;}
+  .plan-section h3{font-size:12px; text-transform:uppercase; color:var(--muted); margin:0 0 6px;}
+  .plan-item{padding:6px 0; border-bottom:1px solid var(--line); font-size:13px; display:flex; justify-content:space-between; gap:10px;}
+  .loading{color:var(--muted); font-family:var(--mono); font-size:12px;}
+  footer{text-align:center; color:var(--muted); font-size:11px; padding:20px; font-family:var(--mono);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="mark">◈</span>
+    <h1>ShelfSenseAI</h1>
+    <span class="tag">Agentic Retail Decision Intelligence System</span>
+  </div>
+  <div class="agent-strip">
+    <span>Demand</span><span>Inventory</span><span>Pricing</span><span>Policy·RAG</span><span>Decision</span>
+  </div>
+</header>
+
+<main>
+  <div class="kpis" id="kpis"></div>
+
+  <div class="grid">
+    <div>
+      <div class="card">
+        <h2><span class="dot"></span>What-If Simulator</h2>
+        <div class="row">
+          <select id="sim-store"></select>
+          <select id="sim-item"></select>
+        </div>
+        <div class="tabs">
+          <div class="tab active" data-pane="price">Pricing</div>
+          <div class="tab" data-pane="inventory">Inventory</div>
+          <div class="tab" data-pane="supplier">Supplier Delay</div>
+          <div class="tab" data-pane="transfer">Store Transfer</div>
+        </div>
+
+        <div class="pane active" id="pane-price">
+          <div class="row">
+            <label class="muted" style="align-self:center;">Price changes to compare (%):</label>
+            <input id="price-changes" value="-15,-10,-5,0,5" style="width:160px;">
+            <button onclick="runPrice()">Simulate</button>
+          </div>
+          <div id="price-result"></div>
+        </div>
+
+        <div class="pane" id="pane-inventory">
+          <div class="row">
+            <label class="muted" style="align-self:center;">Current stock (units):</label>
+            <input id="inv-stock" type="number" placeholder="auto-estimate if blank" style="width:200px;">
+            <button onclick="runInventory()">Simulate</button>
+          </div>
+          <div id="inventory-result"></div>
+        </div>
+
+        <div class="pane" id="pane-supplier">
+          <div class="row">
+            <label class="muted" style="align-self:center;">Supplier delay (days):</label>
+            <input id="delay-days" type="number" value="3" style="width:100px;">
+            <button onclick="runSupplier()">Simulate</button>
+          </div>
+          <div id="supplier-result"></div>
+        </div>
+
+        <div class="pane" id="pane-transfer">
+          <p class="muted">Checks all stores for this item and recommends transfers to relieve low-coverage stores.</p>
+          <button onclick="runTransfer()">Simulate</button>
+          <div id="transfer-result"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2><span class="dot"></span>Policy Agent (RAG)</h2>
+        <div class="row">
+          <input id="policy-q" placeholder="e.g. Can I reduce this product's price by 10%?" style="flex:1; min-width:260px;">
+          <button onclick="runPolicy()">Ask</button>
+        </div>
+        <div id="policy-result"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h2><span class="dot"></span>Next Week Plan — Planner Agent</h2>
+        <div class="row">
+          <select id="plan-store"></select>
+          <button onclick="runPlan()">Generate Plan</button>
+        </div>
+        <div id="plan-result"><p class="muted">Fans out to Demand, Inventory & Pricing agents for every product in the store, then rolls the results into one action plan.</p></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>ShelfSenseAI · Orchestrator → Demand / Inventory / Pricing / Policy Agents → Decision Agent · FastAPI + scikit-learn</footer>
+
+<script>
+const API = "";
+let META = {stores:[], items:[]};
+
+async function loadMeta(){
+  const res = await fetch(API + "/api/meta");
+  META = await res.json();
+  ["sim-store","plan-store"].forEach(id=>{
+    const el = document.getElementById(id);
+    el.innerHTML = META.stores.map(s=>`<option value="${s}">${s}</option>`).join("");
+  });
+  document.getElementById("sim-item").innerHTML = META.items.map(i=>`<option value="${i}">${i}</option>`).join("");
+}
+
+async function loadKpis(){
+  const res = await fetch(API + "/api/kpis");
+  const d = await res.json();
+  document.getElementById("kpis").innerHTML = `
+    <div class="kpi"><div class="label">Total Revenue (2yr)</div><div class="value">₹${(d.total_revenue/1e6).toFixed(2)}M</div></div>
+    <div class="kpi"><div class="label">Est. Profit (2yr)</div><div class="value">₹${(d.estimated_profit/1e6).toFixed(2)}M</div></div>
+    <div class="kpi"><div class="label">Products Tracked</div><div class="value">${d.num_products}</div></div>
+    <div class="kpi"><div class="label">Stores</div><div class="value">${d.num_stores}</div></div>
+  `;
+}
+
+document.querySelectorAll(".tab").forEach(tab=>{
+  tab.onclick = ()=>{
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    document.querySelectorAll(".pane").forEach(p=>p.classList.remove("active"));
+    tab.classList.add("active");
+    document.getElementById("pane-"+tab.dataset.pane).classList.add("active");
+  };
+});
+
+function currentStoreItem(){
+  return {store: document.getElementById("sim-store").value, item: document.getElementById("sim-item").value};
+}
+
+async function runPrice(){
+  const {store, item} = currentStoreItem();
+  const changes = document.getElementById("price-changes").value.split(",").map(s=>parseFloat(s.trim()));
+  const box = document.getElementById("price-result");
+  box.innerHTML = `<p class="loading">Running pricing agent + demand model...</p>`;
+  const res = await fetch(API + "/api/simulate/price", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({store, item, price_changes_pct: changes})});
+  const d = await res.json();
+  const bestPct = d.recommended_scenario.price_change_pct;
+  let rows = d.all_scenarios.map(s=>`
+    <tr class="${s.price_change_pct===bestPct?'best':''}">
+      <td>${s.price_change_pct>0?'+':''}${s.price_change_pct}%</td>
+      <td>₹${s.price}</td>
+      <td>${s.expected_daily_sales}</td>
+      <td>₹${s.expected_daily_revenue.toLocaleString()}</td>
+      <td>₹${s.expected_daily_profit.toLocaleString()}</td>
+      <td>${s.margin_pct}%</td>
+    </tr>`).join("");
+  box.innerHTML = `
+    <table><thead><tr><th>Change</th><th>Price</th><th>Sales/day</th><th>Revenue/day</th><th>Profit/day</th><th>Margin</th></tr></thead><tbody>${rows}</tbody></table>
+    <div class="reasoning">${d.reasoning}${d.policy_note ? "<br><b>Policy:</b> "+d.policy_note : ""}</div>
+    ${renderPolicies(d.relevant_policies)}
+  `;
+}
+
+async function runInventory(){
+  const {store, item} = currentStoreItem();
+  const stockVal = document.getElementById("inv-stock").value;
+  const box = document.getElementById("inventory-result");
+  box.innerHTML = `<p class="loading">Running inventory agent...</p>`;
+  const res = await fetch(API + "/api/simulate/inventory", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({store, item, current_stock: stockVal ? parseInt(stockVal) : null})});
+  const d = await res.json();
+  let rows = d.scenarios.map(s=>`<tr><td>+${s.demand_change_pct}% demand</td><td>${s.projected_stockout_in_days} days</td></tr>`).join("");
+  box.innerHTML = `
+    <span class="badge ${d.urgency}">${d.urgency.toUpperCase()}</span>
+    <table><thead><tr><th>Scenario</th><th>Projected stock-out</th></tr></thead><tbody>${rows}</tbody></table>
+    <div class="reasoning">${d.reasoning}</div>
+    ${renderPolicies(d.relevant_policies)}
+  `;
+}
+
+async function runSupplier(){
+  const {store, item} = currentStoreItem();
+  const delay = parseInt(document.getElementById("delay-days").value || 3);
+  const box = document.getElementById("supplier-result");
+  box.innerHTML = `<p class="loading">Running inventory agent (supplier delay)...</p>`;
+  const res = await fetch(API + "/api/simulate/supplier-delay", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({store, item, delay_days: delay})});
+  const d = await res.json();
+  const det = d.details;
+  box.innerHTML = `
+    <span class="badge ${det.stockout_risk.toLowerCase()}">${det.stockout_risk.toUpperCase()} RISK</span>
+    <table><tbody>
+      <tr><td>Projected demand during delay</td><td>${det.projected_demand_during_delay}</td></tr>
+      <tr><td>Current stock</td><td>${det.current_stock}</td></tr>
+      <tr><td>Projected stock after delay</td><td>${det.projected_stock_after_delay}</td></tr>
+    </tbody></table>
+    <div class="reasoning">${d.action}</div>
+    ${renderPolicies(d.relevant_policies)}
+  `;
+}
+
+async function runTransfer(){
+  const {item} = currentStoreItem();
+  const box = document.getElementById("transfer-result");
+  box.innerHTML = `<p class="loading">Checking coverage across all stores...</p>`;
+  const res = await fetch(API + "/api/simulate/transfer", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({item, stores: META.stores})});
+  const d = await res.json();
+  if(!d.transfers.length){ box.innerHTML = `<p class="muted" style="margin-top:10px;">No transfer needed — all stores within target coverage.</p>`; return; }
+  box.innerHTML = `<table><thead><tr><th>From</th><th>To</th><th>Units</th></tr></thead><tbody>${
+    d.transfers.map(t=>`<tr><td>${t.from}</td><td>${t.to}</td><td>${t.units}</td></tr>`).join("")
+  }</tbody></table>`;
+}
+
+async function runPolicy(){
+  const q = document.getElementById("policy-q").value.trim();
+  if(!q) return;
+  const box = document.getElementById("policy-result");
+  box.innerHTML = `<p class="loading">Retrieving relevant policy...</p>`;
+  const res = await fetch(API + "/api/policy/query", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({question:q})});
+  const d = await res.json();
+  box.innerHTML = renderPolicies(d.results) || `<p class="muted" style="margin-top:10px;">No matching policy found.</p>`;
+}
+
+function renderPolicies(policies){
+  if(!policies || !policies.length) return "";
+  return policies.map(p=>`<div class="policy-hit"><div class="t">${p.title}</div>${p.text}</div>`).join("");
+}
+
+async function runPlan(){
+  const store = document.getElementById("plan-store").value;
+  const box = document.getElementById("plan-result");
+  box.innerHTML = `<p class="loading">Orchestrator fanning out to Demand / Inventory / Pricing agents for every product...</p>`;
+  const res = await fetch(API + "/api/plan/next-week", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({store})});
+  const d = await res.json();
+  let html = "";
+  if(d.reorder.length){
+    html += `<div class="plan-section"><h3>🔴 Reorder</h3>` + d.reorder.map(r=>`<div class="plan-item"><span>${r.item}</span><span class="badge ${r.urgency}">${r.urgency}</span></div>`).join("") + `</div>`;
+  }
+  if(d.monitor.length){
+    html += `<div class="plan-section"><h3>🟡 Monitor</h3>` + d.monitor.map(m=>`<div class="plan-item"><span>${m.item}</span></div>`).join("") + `</div>`;
+  }
+  if(d.pricing_recommendations.length){
+    html += `<div class="plan-section"><h3>💰 Pricing</h3>` + d.pricing_recommendations.map(p=>`<div class="plan-item"><span>${p.item}</span><span>${p.suggested_change_pct>0?'+':''}${p.suggested_change_pct}%</span></div>`).join("") + `</div>`;
+  }
+  if(d.suggested_transfer && d.suggested_transfer.transfers.length){
+    html += `<div class="plan-section"><h3>🚚 Suggested Transfer</h3>` + d.suggested_transfer.transfers.map(t=>`<div class="plan-item"><span>${t.item}</span><span>${t.from} → ${t.to} (${t.units}u)</span></div>`).join("") + `</div>`;
+  }
+  box.innerHTML = html || `<p class="muted">No urgent actions this week.</p>`;
+}
+
+loadMeta().then(()=>{ loadKpis(); });
+</script>
+</body>
+</html>

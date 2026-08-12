@@ -1,0 +1,37 @@
+[
+  {
+    "id": "pricing-01",
+    "title": "Price Reduction Approval Limits",
+    "text": "Store managers may reduce a product's price by up to 8% without regional approval. Reductions between 8% and 15% require regional manager sign-off. Any reduction beyond 15% requires category director approval and must include a projected margin-impact simulation."
+  },
+  {
+    "id": "pricing-02",
+    "title": "Promotional Pricing Windows",
+    "text": "Promotional price cuts are limited to a maximum of 14 consecutive days per SKU per quarter, to avoid training customers to wait for markdowns and to protect baseline margin."
+  },
+  {
+    "id": "inventory-01",
+    "title": "Reorder Threshold Policy",
+    "text": "A reorder should be triggered automatically when projected stock coverage falls below 5 days at current demand forecasts. If projected coverage falls below 3 days, the item is flagged critical and an emergency order path may be used."
+  },
+  {
+    "id": "inventory-02",
+    "title": "Store-to-Store Transfer Policy",
+    "text": "Inter-store inventory transfers are permitted when the source store holds more than 2x its own 14-day demand coverage and the destination store's projected coverage is below 5 days. Transfers above 300 units require logistics approval due to transport cost."
+  },
+  {
+    "id": "supplier-01",
+    "title": "Emergency Order Policy",
+    "text": "An emergency order from an alternate supplier can be placed when the primary supplier reports a delay of 2 or more days AND the affected item's projected stock-out falls within that delay window. Emergency orders typically carry a 12-18% cost premium and should only be used when the projected stock-out risk is High."
+  },
+  {
+    "id": "supplier-02",
+    "title": "Supplier Delay Escalation",
+    "text": "Any supplier delay of 5 or more days must be escalated to the category director regardless of current stock coverage, since it may indicate a broader supply chain disruption."
+  },
+  {
+    "id": "margin-01",
+    "title": "Minimum Margin Floor",
+    "text": "No simulated or actual price change may be recommended if it drops the product's gross margin below 12%, except during pre-approved clearance events."
+  }
+]
