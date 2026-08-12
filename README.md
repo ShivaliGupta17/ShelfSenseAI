@@ -118,13 +118,4 @@ shelfsense-ai/
 └── README.md
 ```
 
-## Extending toward the full JD-scope vision
 
-- Swap the TF-IDF policy retrieval for `sentence-transformers` + a real vector DB (Chroma/FAISS)
-- Replace the rule-based Orchestrator with LangGraph's `StateGraph` for explicit agent-to-agent
-  message passing and conditional routing (the interfaces here are already agent-shaped, so this
-  is a refactor, not a rewrite)
-- Add a persistence layer (Postgres) for actual live stock levels instead of the coverage-based
-  estimate used here
-- Add authenticated write-back so a manager's approved recommendation actually updates
-  price/reorder systems
